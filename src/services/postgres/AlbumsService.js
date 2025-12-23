@@ -26,8 +26,9 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
+    // PERBAIKAN 1: Hapus tanda kutip pada coverUrl agar case-insensitive (cocok dengan kolom 'coverurl' di DB)
     const query = {
-      text: 'SELECT id, name, year, "coverUrl" FROM albums WHERE id = $1',
+      text: 'SELECT id, name, year, coverUrl FROM albums WHERE id = $1',
       values: [id],
     };
 
@@ -39,26 +40,41 @@ class AlbumsService {
 
     const album = result.rows[0];
 
-    // buat nyari daftar lagu dari album
     const songsQuery = {
-        text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
-        values: [id],
+      text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
+      values: [id],
     };
-    
+
     const songsResult = await this._pool.query(songsQuery);
 
     return {
       id: album.id,
       name: album.name,
       year: album.year,
-      coverUrl: album.coverUrl, // Pastikan kolom di DB sesuai
+      // PERBAIKAN 2: Akses property dengan huruf kecil (karena driver pg mengembalikan lowercase)
+      coverUrl: album.coverurl, 
       songs: songsResult.rows,
     };
   }
 
-  async editAlbumCoverById(id, coverUrl) {
+  // PERBAIKAN 3: Method ini ditambahkan kembali (Wajib untuk fitur Update Album)
+  async editAlbumById(id, { name, year }) {
     const query = {
-      text: 'UPDATE albums SET "coverUrl" = $1 WHERE id = $2 RETURNING id',
+      text: 'UPDATE albums SET name = $1, year = $2 WHERE id = $3 RETURNING id',
+      values: [name, year, id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
+    }
+  }
+
+  async editAlbumCoverById(id, coverUrl) {
+    // PERBAIKAN 4: Hapus tanda kutip pada coverUrl
+    const query = {
+      text: 'UPDATE albums SET coverUrl = $1 WHERE id = $2 RETURNING id',
       values: [coverUrl, id],
     };
 
