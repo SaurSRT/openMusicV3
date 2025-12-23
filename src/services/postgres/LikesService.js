@@ -59,7 +59,6 @@ class LikesService {
         };
       }
     } catch (error) {
-      // Jika redis mati/error, abaikan dan lanjut ke DB
     }
 
     const query = {
@@ -78,7 +77,6 @@ class LikesService {
     };
   }
   
-  // Method bantu untuk mengecek apakah album ada (bisa pakai AlbumsService, tapi jika ingin direct check)
   async verifyAlbumExistence(albumId) {
     const query = {
       text: 'SELECT id FROM albums WHERE id = $1',
@@ -86,7 +84,7 @@ class LikesService {
     };
     const result = await this._pool.query(query);
     if (!result.rows.length) {
-      throw new Error('Album tidak ditemukan'); // Nanti ditangkap sebagai NotFound di handler
+      throw new Error('Album tidak ditemukan'); 
     }
   }
 }

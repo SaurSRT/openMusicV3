@@ -26,7 +26,6 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    // [FIXED] Gunakan tanda kutip "coverUrl"
     const query = {
       text: 'SELECT id, name, year, "coverUrl" FROM albums WHERE id = $1',
       values: [id],
@@ -51,7 +50,6 @@ class AlbumsService {
       id: album.id,
       name: album.name,
       year: album.year,
-      // [FIXED] Akses dengan casing yang sesuai
       coverUrl: album.coverUrl, 
       songs: songsResult.rows,
     };
@@ -71,7 +69,6 @@ class AlbumsService {
   }
 
   async editAlbumCoverById(id, coverUrl) {
-    // [FIXED] Gunakan tanda kutip "coverUrl"
     const query = {
       text: 'UPDATE albums SET "coverUrl" = $1 WHERE id = $2 RETURNING id',
       values: [coverUrl, id],

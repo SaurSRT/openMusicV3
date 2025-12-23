@@ -6,7 +6,15 @@ const AlbumPayloadSchema = Joi.object({
 });
 
 const ImageHeadersSchema = Joi.object({
-  'content-type': Joi.string().valid('image/apng', 'image/avif', 'image/gif', 'image/jpeg', 'image/png', 'image/webp', 'image/jpg').required(),
+  'content-type': Joi.string().valid(
+    'image/apng', 
+    'image/avif', 
+    'image/gif', 
+    'image/jpeg', 
+    'image/png', 
+    'image/webp', 
+    'image/jpg'
+  ).required(),
 }).unknown();
 
 module.exports = { AlbumPayloadSchema, ImageHeadersSchema };

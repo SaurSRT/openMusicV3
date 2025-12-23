@@ -12,7 +12,6 @@ class Listener {
 
       const playlistData = await this._playlistService.getPlaylist(playlistId);
       
-      // Format data sesuai kriteria
       const playlist = {
         id: playlistData[0].id,
         name: playlistData[0].name,
@@ -20,7 +19,7 @@ class Listener {
           id: row.song_id,
           title: row.title,
           performer: row.performer,
-        })).filter(song => song.id), // Filter jika playlist kosong
+        })).filter(song => song.id), 
       };
 
       const result = await this._mailSender.sendEmail(targetEmail, JSON.stringify({ playlist }));

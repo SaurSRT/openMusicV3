@@ -27,8 +27,6 @@ const routes = (handler) => [
     handler: handler.postUploadCoverHandler,
     options: {
       payload: {
-        // [PERBAIKAN] Hapus 'allow' agar 413 bisa terdeteksi
-        // allow: 'multipart/form-data', 
         multipart: true,
         output: 'stream',
         maxBytes: 512000, 
