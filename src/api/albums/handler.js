@@ -1,5 +1,7 @@
 const autoBind = require('auto-bind');
 
+const InvariantError = require('../../exceptions/InvariantError');
+
 class AlbumsHandler {
   constructor(service, likesService, storageService, validator) {
     this._service = service;
@@ -58,14 +60,21 @@ class AlbumsHandler {
       message: 'Album berhasil dihapus',
     };
   }
+
   async postUploadCoverHandler(request, h) {
     const { cover } = request.payload;
     const { id } = request.params;
+
+  
+    if (!cover || !cover.hapi) {
+      throw new InvariantError('Gagal mengunggah gambar. Mohon lampirkan data gambar yang valid');
+    }
 
     this._validator.validateImageHeaders(cover.hapi.headers);
 
     const filename = await this._storageService.writeFile(cover, cover.hapi);
     
+
     const coverUrl = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
 
     await this._service.editAlbumCoverById(id, coverUrl);

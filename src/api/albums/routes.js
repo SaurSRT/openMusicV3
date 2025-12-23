@@ -21,14 +21,14 @@ const routes = (handler) => [
     path: '/albums/{id}',
     handler: handler.deleteAlbumByIdHandler,
   },
-
   {
     method: 'POST',
     path: '/albums/{id}/covers',
     handler: handler.postUploadCoverHandler,
     options: {
       payload: {
-        allow: 'multipart/form-data',
+        // [PERBAIKAN] Hapus 'allow' agar 413 bisa terdeteksi
+        // allow: 'multipart/form-data', 
         multipart: true,
         output: 'stream',
         maxBytes: 512000, 

@@ -39,11 +39,9 @@ const TokenManager = require('./tokenize/TokenManager');
 const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
-  
   const cacheService = new CacheService();
   const likesService = new LikesService(cacheService);
   const storageService = new StorageService(path.resolve(__dirname, 'api/albums/file/images'));
-  
   
   const collaborationsService = new CollaborationsService();
   const albumsService = new AlbumsService();
@@ -62,7 +60,6 @@ const init = async () => {
     },
   });
 
-  
   await server.register([
     {
       plugin: Jwt,
@@ -72,7 +69,6 @@ const init = async () => {
     },
   ]);
 
-  
   server.auth.strategy('openmusic_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
@@ -89,7 +85,6 @@ const init = async () => {
     }),
   });
 
-  
   server.route([
     {
       method: 'GET',
@@ -101,7 +96,6 @@ const init = async () => {
       },
     },
   ]);
-
 
   await server.register([
     {
@@ -157,11 +151,11 @@ const init = async () => {
       plugin: _exports, 
       options: {
         service: ProducerService, 
+        playlistsService,
         validator: ExportsValidator,
       },
     },
   ]);
-
 
   server.ext('onPreResponse', (request, h) => {
     const { response } = request;

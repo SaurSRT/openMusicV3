@@ -26,9 +26,9 @@ class AlbumsService {
   }
 
   async getAlbumById(id) {
-    // PERBAIKAN 1: Hapus tanda kutip pada coverUrl agar case-insensitive (cocok dengan kolom 'coverurl' di DB)
+    // [FIXED] Gunakan tanda kutip "coverUrl"
     const query = {
-      text: 'SELECT id, name, year, coverUrl FROM albums WHERE id = $1',
+      text: 'SELECT id, name, year, "coverUrl" FROM albums WHERE id = $1',
       values: [id],
     };
 
@@ -51,13 +51,12 @@ class AlbumsService {
       id: album.id,
       name: album.name,
       year: album.year,
-      // PERBAIKAN 2: Akses property dengan huruf kecil (karena driver pg mengembalikan lowercase)
-      coverUrl: album.coverurl, 
+      // [FIXED] Akses dengan casing yang sesuai
+      coverUrl: album.coverUrl, 
       songs: songsResult.rows,
     };
   }
 
-  // PERBAIKAN 3: Method ini ditambahkan kembali (Wajib untuk fitur Update Album)
   async editAlbumById(id, { name, year }) {
     const query = {
       text: 'UPDATE albums SET name = $1, year = $2 WHERE id = $3 RETURNING id',
@@ -72,9 +71,9 @@ class AlbumsService {
   }
 
   async editAlbumCoverById(id, coverUrl) {
-    // PERBAIKAN 4: Hapus tanda kutip pada coverUrl
+    // [FIXED] Gunakan tanda kutip "coverUrl"
     const query = {
-      text: 'UPDATE albums SET coverUrl = $1 WHERE id = $2 RETURNING id',
+      text: 'UPDATE albums SET "coverUrl" = $1 WHERE id = $2 RETURNING id',
       values: [coverUrl, id],
     };
 
